@@ -16,7 +16,8 @@ function getRandomMeal() {
           addMealToDOM(meal);
       })
 }
-getRandomMeal()
+
+
 // Add meal to DOM
 function addMealToDOM(meal) {
     const ingredients = [];
@@ -48,20 +49,51 @@ function addMealToDOM(meal) {
     `;
   }
 
-  function searchMeal(e) {
+function searchMeal(e) {
     e.preventDefault()
 
     let inputValue = search.value
+    single_mealEl.innerHTML = ""
+    mealsEl.innerHTML = ""
 
     if(inputValue.trim()) {
-      fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputValue}`)
-      .then(res => res.json())
-      resultHeading.innerHTML = `<h2>Search results for '${inputValue}':</h2>`
-    } else if(inputValue === null) {
-        alert(resultHeading.innerHTML = `<p>There are no search results. Try again!<p>`)
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputValue}`)
+            .then(res => res.json())
+            .then((data) => {
+                // const meal = data.meals[0]
+                // addMealToDOM(meal)
+                if(data.meals === null) {
+                    resultHeading.innerHTML = `<p>There are no search results. Try again!<p>`
+                } else {
+                    resultHeading.innerHTML = `<h2>Search results for '${inputValue}':</h2>`
+                    mealsEl.innerHTML = data.meals
+                        .map(
+                            (meal) => `
+                                <div class="meal">
+                                  <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
+                                  <div class="meal-info" data-mealID="${meal.idMeal}">
+                                    <h3>${meal.strMeal}</h3>
+                                  </div>
+                                </div>
+                              `
+                        ).join("")
+                }
+            })
+        search.value = ""
+    } else {
+        alert('Please enter a meal name')
     }
-  }
+}
 
+
+function getMealById(mealID) {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealID}`)
+        .then((res) => res.json())
+        .then((data) => {
+            const meal = data.meals[0]
+            addMealToDOM(meal)
+        })
+}
 
   // Event listeners
   submit.addEventListener('submit', searchMeal);
