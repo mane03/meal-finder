@@ -4,6 +4,7 @@ const search = document.getElementById('search'),
   mealsEl = document.getElementById('meals'),
   resultHeading = document.getElementById('result-heading'),
   single_mealEl = document.getElementById('single-meal');
+  
 function getRandomMeal() {
   mealsEl.innerHTML = ""
   resultHeading.innerHTML = ""
@@ -60,21 +61,6 @@ function addMealToDOM(meal) {
         alert(resultHeading.innerHTML = `<p>There are no search results. Try again!<p>`)
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   // Event listeners
